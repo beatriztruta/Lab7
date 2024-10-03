@@ -5,7 +5,6 @@ import org.example.utils.Constantes;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Reabastecedor extends Constantes implements Runnable {
     private final Estoque estoque;
@@ -22,6 +21,6 @@ public class Reabastecedor extends Constantes implements Runnable {
 
     public static void iniciarReabastecimento(Estoque estoque) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(new Reabastecedor(estoque), 0, VALOR_INTERVALO_ATUALIZACAO_REABASTECEDOR, INTERVALO_ATUALIZACAO_REABASTECEDOR);
+        scheduler.scheduleAtFixedRate(new Reabastecedor(estoque), 0, PERIODO_INTERVALO_ATUALIZACAO_REABASTECEDOR, INTERVALO_ATUALIZACAO_REABASTECEDOR);
     }
 }
