@@ -1,9 +1,12 @@
 package org.example.queue;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+@Slf4j
 public class Estoque {
     private final Map<String, Integer> produtos;
     private final ReentrantReadWriteLock lock;
@@ -17,7 +20,7 @@ public class Estoque {
         lock.writeLock().lock();
         try {
             produtos.put(nome, produtos.getOrDefault(nome, 0) + quantidade);
-            System.out.println("Reabastecido: " + nome + " (" + quantidade + " itens)");
+            log.info("Reabastecido produto: {} ({} itens)", nome, quantidade);
         } finally {
             lock.writeLock().unlock();
         }
@@ -36,7 +39,7 @@ public class Estoque {
         lock.writeLock().lock();
         try {
             produtos.put(nome, produtos.get(nome) - quantidade);
-            System.out.println("Pedido processado: " + nome + " (" + quantidade + " itens)");
+            log.info("Pedido processado:  {} ({} itens)", nome, quantidade);
         } finally {
             lock.writeLock().unlock();
         }

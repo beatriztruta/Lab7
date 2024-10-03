@@ -1,18 +1,12 @@
 package org.example.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@Data
 public class Cliente {
 
-    private long id;
+    private final long id;
 
-    public Cliente(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 }
