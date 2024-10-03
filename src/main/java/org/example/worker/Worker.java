@@ -39,6 +39,7 @@ public class Worker implements Runnable {
                 }
             }
         } catch (InterruptedException e) {
+            log.error("Houve um erro durante execucao do worker {}", e.getMessage());
             Thread.currentThread().interrupt();
         }
     }
