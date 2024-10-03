@@ -16,7 +16,7 @@ public class Reabastecedor extends Constantes implements Runnable {
 
     @Override
     public void run() {
-        estoque.adicionarProduto("Produto A", 10);
+        estoque.adicionarProduto("Produto A", 10); // produtos exemplo, deve ser melhorado mais tarde essa logica
         estoque.adicionarProduto("Produto B", 5);
     }
 
