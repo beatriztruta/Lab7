@@ -24,17 +24,19 @@ public class App {
             workers.submit(new Worker(filaDePedidos, estoque));
         }
 
-        Reabastecedor.iniciarReabastecimento(estoque);
+        ReabastecedorInteligente.iniciarReabastecimento(estoque);
         RelatorioDeVendas.iniciarRelatorio(estoque);
 
-        Produto[] produtos1 = {new Produto("Produto A", 2), new Produto("Produto B", 1)};
-        Produto[] produtos2 = {new Produto("Produto A", 3)};
+        Produto[] produtos1 = { new Produto("Produto A", 2), new Produto("Produto B", 1) };
+        Produto[] produtos2 = { new Produto("Produto A", 3) };
+        Produto[] produtos3 = { new Produto("Produto C", 4) };
 
         try {
-            filaDePedidos.adicionarPedido(new Pedido(new Cliente(1), produtos1));
-            filaDePedidos.adicionarPedido(new Pedido(new Cliente(2), produtos2));
+            filaDePedidos.adicionarPedido(new Pedido("Cliente 1", produtos1, 2));
+            filaDePedidos.adicionarPedido(new Pedido("Cliente 2", produtos2, 5)); // Prioridade Alta
+            filaDePedidos.adicionarPedido(new Pedido("Cliente 3", produtos3, 1)); // Prioridade Baixa
         } catch (InterruptedException e) {
-            log.error("Houve um erro durante executado do projeto ", e);
+            e.printStackTrace();
         }
     }
 }

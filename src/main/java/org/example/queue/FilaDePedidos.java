@@ -5,18 +5,18 @@ import org.example.model.Pedido;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class FilaDePedidos {
-    private final BlockingQueue<Pedido> fila;
+class FilaDePedidos {
+    private PriorityBlockingQueue<Pedido> fila;
 
     public FilaDePedidos(int capacidade) {
-        this.fila = new ArrayBlockingQueue<>(capacidade);
+        this.fila = new PriorityBlockingQueue<>(capacidade);
     }
 
     public void adicionarPedido(Pedido pedido) throws InterruptedException {
-        fila.put(pedido);
+        fila.put(pedido); 
     }
 
     public Pedido retirarPedido() throws InterruptedException {
-        return fila.take();
+        return fila.take(); 
     }
 }
