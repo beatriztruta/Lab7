@@ -21,25 +21,32 @@ public class Worker implements Runnable {
         try {
             while (true) {
                 Pedido pedido = filaDePedidos.retirarPedido();
-                boolean podeProcessar = true;
+                CompletableFuture<Boolean> pagamentoFuturo = Pagamento.processarPagamento(pedido);
                 
-                for (Produto produto : pedido.getProdutos()) {
-                    if (!estoque.verificarDisponibilidade(produto.getNome(), produto.getQuantidade())) {
-                        podeProcessar = false;
-                        System.out.println("Pedido rejeitado: " + pedido.getCliente());
-                        break;
-                    }
-                }
+                pagamentoFuturo.thenAccept((pagamentoConfirmado) -> {
+                    if (pagamentoConfirmado) {
+                        boolean podeProcessar = true;
 
-                if (podeProcessar) {
-                    for (Produto produto : pedido.getProdutos()) {
-                        estoque.retirarProduto(produto.getNome(), produto.getQuantidade());
+                        for (Produto produto : pedido.getProdutos()) {
+                            if (!estoque.verificarDisponibilidade(produto.getNome(), produto.getQuantidade())) {
+                                podeProcessar = false;
+                                System.out.println("Pedido rejeitado por falta de estoque: " + pedido.getCliente());
+                                break;
+                            }
+                        }
+
+                        if (podeProcessar) {
+                            for (Produto produto : pedido.getProdutos()) {
+                                estoque.retirarProduto(produto.getNome(), produto.getQuantidade());
+                            }
+                            System.out.println("Pedido de " + pedido.getCliente() + " foi processado com sucesso.");
+                        }
                     }
-                    System.out.println("Pedido de " + pedido.getCliente() + " foi processado com sucesso.");
-                }
+                }).get(); 
+
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
