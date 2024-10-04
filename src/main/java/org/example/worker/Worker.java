@@ -22,11 +22,11 @@ public class Worker implements Runnable {
             while (true) {
                 Pedido pedido = filaDePedidos.retirarPedido();
                 boolean podeProcessar = true;
-
+                
                 for (Produto produto : pedido.getProdutos()) {
                     if (!estoque.verificarDisponibilidade(produto.getNome(), produto.getQuantidade())) {
                         podeProcessar = false;
-                        log.info("Pedido do cliete com id {} foi rejeitado", pedido.getCliente().getId());
+                        System.out.println("Pedido rejeitado: " + pedido.getCliente());
                         break;
                     }
                 }
@@ -35,11 +35,10 @@ public class Worker implements Runnable {
                     for (Produto produto : pedido.getProdutos()) {
                         estoque.retirarProduto(produto.getNome(), produto.getQuantidade());
                     }
-                    log.info("Pedido do cliente com id {} foi processado com sucesso", pedido.getCliente().getId());
+                    System.out.println("Pedido de " + pedido.getCliente() + " foi processado com sucesso.");
                 }
             }
         } catch (InterruptedException e) {
-            log.error("Houve um erro durante execucao do worker {}", e.getMessage());
             Thread.currentThread().interrupt();
         }
     }
