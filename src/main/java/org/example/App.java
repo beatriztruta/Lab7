@@ -16,19 +16,30 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class App {
     public static void main(String[] args) {
+        // Inicializa o estoque com produtos
         Estoque estoque = new Estoque();
+        estoque.adicionarProduto("Produto A", 10);
+        estoque.adicionarProduto("Produto B", 20);
+        estoque.adicionarProduto("Produto C", 15);
+
+        // Inicializa a fila de pedidos
         FilaDePedidos filaDePedidos = new FilaDePedidos(10);
 
+        // Cria o relatório de vendas
+        RelatorioDeVendas relatorioDeVendas = new RelatorioDeVendas(estoque);
+        relatorioDeVendas.iniciar(); // Inicia a geração de relatórios
+
+        // Cria threads para processar pedidos
         ExecutorService workers = Executors.newFixedThreadPool(4);
         for (int i = 0; i < 4; i++) {
-            workers.submit(new Worker(filaDePedidos, estoque));
+            workers.submit(new Worker(filaDePedidos, estoque, relatorioDeVendas));
         }
+
+        // Inicia reabastecimento inteligente
         ReabastecedorInteligente reabastecedorInteligente = new ReabastecedorInteligente(estoque);
+        reabastecedorInteligente.iniciarReabastecimento();
 
-        reabastecedorInteligente.iniciarReabastecimento(estoque);
-
-        RelatorioDeVendas.iniciarRelatorio(estoque);
-
+        // Adiciona alguns pedidos para teste
         Produto[] produtos1 = {new Produto("Produto A", 2), new Produto("Produto B", 1)};
         Produto[] produtos2 = {new Produto("Produto A", 3)};
         Produto[] produtos3 = {new Produto("Produto C", 4)};
@@ -38,7 +49,7 @@ public class App {
             filaDePedidos.adicionarPedido(new Pedido(new Cliente(2), produtos2, 5)); // Prioridade Alta
             filaDePedidos.adicionarPedido(new Pedido(new Cliente(3), produtos3, 1)); // Prioridade Baixa
         } catch (InterruptedException e) {
-            log.error("Houve um erro durante execucão do sistema, ", e.getMessage());
+            log.error("Erro ao adicionar pedidos: ", e);
         }
     }
 }

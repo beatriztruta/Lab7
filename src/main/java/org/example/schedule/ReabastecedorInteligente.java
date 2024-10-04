@@ -19,12 +19,16 @@ public class ReabastecedorInteligente extends Constantes implements Runnable {
     @Override
     public void run() {
         String produtoPopular = estoque.produtoMaisPopular();
-        estoque.adicionarProduto(produtoPopular, QUANTIDADE_ITENS_REABASTECER);
-        log.info("Reabastecimento Inteligente: Produto mais popular é {} ", produtoPopular);
+        if (produtoPopular != null && !produtoPopular.isEmpty()) {
+            estoque.adicionarProduto(produtoPopular, QUANTIDADE_ITENS_REABASTECER);
+            log.info("Reabastecimento Inteligente: Produto mais popular é '{}', adicionando {} itens", produtoPopular, QUANTIDADE_ITENS_REABASTECER);
+        } else {
+            log.warn("Nenhum produto foi identificado como popular para reabastecimento.");
+        }
     }
 
-    public  void iniciarReabastecimento(Estoque estoque) {
+    public void iniciarReabastecimento() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(new ReabastecedorInteligente(estoque), 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this, 0, PERIODO_INTERVALO_ATUALIZACAO_REABASTECEDOR, INTERVALO_ATUALIZACAO_REABASTECEDOR);
     }
 }
