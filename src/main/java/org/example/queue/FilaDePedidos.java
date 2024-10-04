@@ -2,10 +2,9 @@ package org.example.queue;
 
 import org.example.model.Pedido;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
-class FilaDePedidos {
+public class FilaDePedidos {
     private PriorityBlockingQueue<Pedido> fila;
 
     public FilaDePedidos(int capacidade) {

@@ -6,7 +6,7 @@ import org.example.model.Pedido;
 import org.example.model.Produto;
 import org.example.queue.Estoque;
 import org.example.queue.FilaDePedidos;
-import org.example.schedule.Reabastecedor;
+import org.example.schedule.ReabastecedorInteligente;
 import org.example.schedule.RelatorioDeVendas;
 import org.example.worker.Worker;
 
@@ -23,20 +23,22 @@ public class App {
         for (int i = 0; i < 4; i++) {
             workers.submit(new Worker(filaDePedidos, estoque));
         }
+        ReabastecedorInteligente reabastecedorInteligente = new ReabastecedorInteligente(estoque);
 
-        ReabastecedorInteligente.iniciarReabastecimento(estoque);
+        reabastecedorInteligente.iniciarReabastecimento(estoque);
+
         RelatorioDeVendas.iniciarRelatorio(estoque);
 
-        Produto[] produtos1 = { new Produto("Produto A", 2), new Produto("Produto B", 1) };
-        Produto[] produtos2 = { new Produto("Produto A", 3) };
-        Produto[] produtos3 = { new Produto("Produto C", 4) };
+        Produto[] produtos1 = {new Produto("Produto A", 2), new Produto("Produto B", 1)};
+        Produto[] produtos2 = {new Produto("Produto A", 3)};
+        Produto[] produtos3 = {new Produto("Produto C", 4)};
 
         try {
-            filaDePedidos.adicionarPedido(new Pedido("Cliente 1", produtos1, 2));
-            filaDePedidos.adicionarPedido(new Pedido("Cliente 2", produtos2, 5)); // Prioridade Alta
-            filaDePedidos.adicionarPedido(new Pedido("Cliente 3", produtos3, 1)); // Prioridade Baixa
+            filaDePedidos.adicionarPedido(new Pedido(new Cliente(1), produtos1, 2));
+            filaDePedidos.adicionarPedido(new Pedido(new Cliente(2), produtos2, 5)); // Prioridade Alta
+            filaDePedidos.adicionarPedido(new Pedido(new Cliente(3), produtos3, 1)); // Prioridade Baixa
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("Houve um erro durante execucão do sistema, ", e.getMessage());
         }
     }
 }

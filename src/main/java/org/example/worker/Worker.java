@@ -1,10 +1,13 @@
 package org.example.worker;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.model.Pagamento;
 import org.example.model.Pedido;
 import org.example.model.Produto;
 import org.example.queue.Estoque;
 import org.example.queue.FilaDePedidos;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 public class Worker implements Runnable {
@@ -30,7 +33,7 @@ public class Worker implements Runnable {
                         for (Produto produto : pedido.getProdutos()) {
                             if (!estoque.verificarDisponibilidade(produto.getNome(), produto.getQuantidade())) {
                                 podeProcessar = false;
-                                System.out.println("Pedido rejeitado por falta de estoque: " + pedido.getCliente());
+                                log.info("Pedido rejeitado por falta de estoque: {}", pedido.getCliente());
                                 break;
                             }
                         }
@@ -39,14 +42,14 @@ public class Worker implements Runnable {
                             for (Produto produto : pedido.getProdutos()) {
                                 estoque.retirarProduto(produto.getNome(), produto.getQuantidade());
                             }
-                            System.out.println("Pedido de " + pedido.getCliente() + " foi processado com sucesso.");
+                            log.info("Pedido de {} foi processado com sucesso.", pedido.getCliente().getId());
                         }
                     }
                 }).get(); 
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Houve erro durante execucão do worker", e.getMessage());
         }
     }
 }

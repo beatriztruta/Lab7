@@ -22,7 +22,7 @@ public class Estoque {
         lock.writeLock().lock();
         try {
             produtos.put(nome, produtos.getOrDefault(nome, 0) + quantidade);
-            System.out.println("Reabastecido: " + nome + " (" + quantidade + " itens)");
+            log.info("Reabastecido: {} ({} itens)", nome, quantidade );
         } finally {
             lock.writeLock().unlock();
         }
@@ -42,7 +42,8 @@ public class Estoque {
         try {
             produtos.put(nome, produtos.get(nome) - quantidade);
             popularidade.put(nome, popularidade.getOrDefault(nome, 0) + 1); // Incrementa a popularidade
-            System.out.println("Pedido processado: " + nome + " (" + quantidade + " itens)");
+
+            log.info("Pedido processado: {} ({} itens)", nome, quantidade );
         } finally {
             lock.writeLock().unlock();
         }

@@ -22,7 +22,7 @@ public class RelatorioDeVendas extends Constantes implements Runnable {
     @Override
     public void run() {
         log.info("=-=-=-=Relatório de Vendas =-=-=-=");
-        log.info("\"Pedidos processados: {}", pedidosProcessados);
+        log.info("Pedidos processados: {}", pedidosProcessados);
         log.info("Pedidos rejeitados: {}", pedidosRejeitados);
     }
 
